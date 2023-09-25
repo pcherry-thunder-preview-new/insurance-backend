@@ -14,8 +14,6 @@ class User(SQLModel, table=True):
     username: str = Field(sa_column=Column("username", String, unique=True))
     beta_user: Optional[bool]
     account_type: Optional[str]
-    region: Optional[str]
-    company: Optional[str]
 
 
 sqlite_file_name = "database.db"
@@ -32,8 +30,6 @@ class RegistrationDetails(BaseModel):
     username: str
     betaUser: Optional[bool] = False
     accountType: Optional[str] = None
-    region: Optional[str] = None
-    company: Optional[str] = None
 
 
 class LoginDetails(BaseModel):
@@ -63,8 +59,6 @@ def create_user(details: RegistrationDetails):
         username=details.username,
         beta_user=details.betaUser,
         account_type=account_type,
-        company=details.company,
-        region=details.region,
     )
     session.add(user)
     session.commit()
@@ -72,8 +66,6 @@ def create_user(details: RegistrationDetails):
         "username": details.username,
         "betaUser": details.betaUser,
         "accountType": account_type,
-        "company": details.company,
-        "region": details.region,
     }
 
 
@@ -87,32 +79,8 @@ def init_users():
     user_2 = RegistrationDetails(
         username="regularuser", betaUser=False, accountType=ALL_IN_ONE
     )
-    
     if not check_if_user_exists(user_2):
         create_user(user_2)
-        
-    user_3 = RegistrationDetails(
-        username="honda_engn", 
-        betaUser=False, 
-        accountType=ALL_IN_ONE,
-        company="Honda",
-        region="JAPAN"
-    )
-    
-    if not check_if_user_exists(user_3):
-        create_user(user_3)
-    
-    user_4 = RegistrationDetails(
-        username="UCB", 
-        betaUser=False, 
-        accountType=ALL_IN_ONE,
-        company="UCB",
-        region="USA-CA"
-    )
-    
-    if not check_if_user_exists(user_4):
-        create_user(user_4)
-    
 
 
 init_users()
